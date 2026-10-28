@@ -1,0 +1,11 @@
+spring:
+  datasource:
+    # Shared in-memory DB: lives as long as the pool holds a connection; fast and isolated per JVM.
+    url: jdbc:sqlite:file:testdb?mode=memory&cache=shared
+    hikari:
+      maximum-pool-size: 1
+      minimum-idle: 1
+
+app:
+  seed:
+    employee-count: 0
