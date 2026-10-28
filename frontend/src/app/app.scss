@@ -1,0 +1,39 @@
+.toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  gap: 8px;
+  background: var(--mat-sys-primary);
+  color: var(--mat-sys-on-primary);
+}
+
+.brand {
+  font: var(--mat-sys-title-large);
+  margin-right: 24px;
+}
+
+.nav a {
+  color: inherit;
+  opacity: 0.8;
+
+  &.active {
+    opacity: 1;
+    background: color-mix(in srgb, var(--mat-sys-on-primary) 16%, transparent);
+  }
+}
+
+.content {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+}
+
+@media (max-width: 600px) {
+  .brand {
+    display: none;
+  }
+
+  .content {
+    padding-top: 16px;
+  }
+}

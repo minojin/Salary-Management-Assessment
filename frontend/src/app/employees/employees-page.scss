@@ -1,0 +1,57 @@
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  mat-form-field {
+    width: 200px;
+  }
+
+  .search {
+    flex: 1 1 280px;
+  }
+}
+
+.progress {
+  height: 4px;
+}
+
+table {
+  width: 100%;
+}
+
+.name {
+  font-weight: 500;
+}
+
+.small {
+  font-size: 12px;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.actions {
+  white-space: nowrap;
+  text-align: right;
+  width: 96px;
+}
+
+.message {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--mat-sys-on-surface-variant);
+
+  &.error {
+    color: var(--mat-sys-error);
+  }
+}
+
+@media (max-width: 600px) {
+  .filters mat-form-field {
+    width: 100%;
+  }
+}

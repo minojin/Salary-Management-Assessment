@@ -1,0 +1,16 @@
+<mat-toolbar class="toolbar">
+  <mat-icon aria-hidden="true">payments</mat-icon>
+  <span class="brand">ACME Salaries</span>
+  <nav class="nav" aria-label="Main">
+    <a mat-button routerLink="/employees" routerLinkActive="active">
+      <mat-icon>groups</mat-icon> Employees
+    </a>
+    <a mat-button routerLink="/insights" routerLinkActive="active">
+      <mat-icon>insights</mat-icon> Insights
+    </a>
+  </nav>
+</mat-toolbar>
+
+<main class="content">
+  <router-outlet />
+</main>

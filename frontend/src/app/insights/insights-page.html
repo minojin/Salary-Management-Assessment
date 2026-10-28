@@ -1,0 +1,136 @@
+<header class="page-header">
+  <div>
+    <h1>Salary insights</h1>
+    <p>How ACME pays people. Each country is shown in its own currency; amounts are never mixed or converted.</p>
+  </div>
+</header>
+
+@if (error(); as message) {
+  <p class="error" role="alert">{{ message }}</p>
+}
+
+@if (overview(); as o) {
+  <section class="kpis" aria-label="Organisation overview">
+    <div class="card kpi">
+      <mat-icon>groups</mat-icon>
+      <div><span class="value">{{ o.totalEmployees.toLocaleString() }}</span><span class="label">Employees</span></div>
+    </div>
+    <div class="card kpi">
+      <mat-icon>public</mat-icon>
+      <div><span class="value">{{ o.countries.length }}</span><span class="label">Countries</span></div>
+    </div>
+    <div class="card kpi">
+      <mat-icon>apartment</mat-icon>
+      <div><span class="value">{{ o.departmentCount }}</span><span class="label">Departments</span></div>
+    </div>
+    <div class="card kpi">
+      <mat-icon>badge</mat-icon>
+      <div><span class="value">{{ o.jobTitleCount }}</span><span class="label">Job titles</span></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2 class="section-title">By country <span class="muted">· select a country to see its breakdown</span></h2>
+    <div class="table-wrap">
+      <table mat-table [dataSource]="o.countries">
+        <ng-container matColumnDef="country">
+          <th mat-header-cell *matHeaderCellDef>Country</th>
+          <td mat-cell *matCellDef="let c">
+            <span class="name">{{ c.countryName }}</span><span class="muted currency">{{ c.currency }}</span>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="headcount">
+          <th mat-header-cell *matHeaderCellDef class="num">Headcount</th>
+          <td mat-cell *matCellDef="let c" class="num">{{ c.stats.headcount.toLocaleString() }}</td>
+        </ng-container>
+        <ng-container matColumnDef="minSalary">
+          <th mat-header-cell *matHeaderCellDef class="num">Lowest</th>
+          <td mat-cell *matCellDef="let c" class="num">{{ c.stats.minSalary | money: c.currency }}</td>
+        </ng-container>
+        <ng-container matColumnDef="averageSalary">
+          <th mat-header-cell *matHeaderCellDef class="num">Average</th>
+          <td mat-cell *matCellDef="let c" class="num strong">{{ c.stats.averageSalary | money: c.currency }}</td>
+        </ng-container>
+        <ng-container matColumnDef="maxSalary">
+          <th mat-header-cell *matHeaderCellDef class="num">Highest</th>
+          <td mat-cell *matCellDef="let c" class="num">{{ c.stats.maxSalary | money: c.currency }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="countryColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: countryColumns" class="clickable"
+            [class.selected]="row.country === selected()" tabindex="0" role="button"
+            [attr.aria-pressed]="row.country === selected()"
+            (click)="select(row.country)" (keydown.enter)="select(row.country)"></tr>
+      </table>
+    </div>
+  </section>
+}
+
+@if (breakdown(); as b) {
+  <section class="card breakdown">
+    <div class="breakdown-header">
+      <h2 class="section-title">
+        {{ b.summary.countryName }}
+        <span class="muted">· {{ b.summary.stats.headcount.toLocaleString() }} employees · salaries in {{ b.summary.currency }}</span>
+      </h2>
+      <mat-button-toggle-group [value]="groupBy()" (change)="groupBy.set($event.value)" aria-label="Group by"
+                               hideSingleSelectionIndicator>
+        <mat-button-toggle value="jobTitle">By job title</mat-button-toggle>
+        <mat-button-toggle value="department">By department</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+    <div class="progress">
+      @if (loading()) {
+        <mat-progress-bar mode="indeterminate" />
+      }
+    </div>
+
+    @if (b.summary.stats.headcount === 0) {
+      <p class="empty">No employees in {{ b.summary.countryName }} yet.</p>
+    } @else {
+      <div class="table-wrap">
+        <table mat-table [dataSource]="groups()" matSort [matSortActive]="sort().active"
+               [matSortDirection]="sort().direction" (matSortChange)="sort.set($event)">
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>
+              {{ groupBy() === 'jobTitle' ? 'Job title' : 'Department' }}
+            </th>
+            <td mat-cell *matCellDef="let g" class="name">{{ g.name }}</td>
+          </ng-container>
+          <ng-container matColumnDef="headcount">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before" class="num">People</th>
+            <td mat-cell *matCellDef="let g" class="num">{{ g.stats.headcount }}</td>
+          </ng-container>
+          <ng-container matColumnDef="minSalary">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before" class="num">Lowest</th>
+            <td mat-cell *matCellDef="let g" class="num">{{ g.stats.minSalary | money: b.summary.currency }}</td>
+          </ng-container>
+          <ng-container matColumnDef="averageSalary">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before" class="num">Average</th>
+            <td mat-cell *matCellDef="let g" class="num strong">{{ g.stats.averageSalary | money: b.summary.currency }}</td>
+          </ng-container>
+          <ng-container matColumnDef="maxSalary">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header arrowPosition="before" class="num">Highest</th>
+            <td mat-cell *matCellDef="let g" class="num">{{ g.stats.maxSalary | money: b.summary.currency }}</td>
+          </ng-container>
+          <ng-container matColumnDef="range">
+            <th mat-header-cell *matHeaderCellDef>Range within {{ b.summary.countryName }}</th>
+            <td mat-cell *matCellDef="let g">
+              <app-range-bar [min]="g.stats.minSalary" [avg]="g.stats.averageSalary" [max]="g.stats.maxSalary"
+                             [scaleMin]="b.summary.stats.minSalary" [scaleMax]="b.summary.stats.maxSalary"
+                             [label]="g.name + ': ' + (g.stats.minSalary | money: b.summary.currency) + ' to ' +
+                                      (g.stats.maxSalary | money: b.summary.currency)" />
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="groupColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: groupColumns"></tr>
+        </table>
+      </div>
+      <p class="footnote muted">
+        Want the people behind a number?
+        <a routerLink="/employees">Open the employee directory</a> and filter by country and job title.
+      </p>
+    }
+  </section>
+}
