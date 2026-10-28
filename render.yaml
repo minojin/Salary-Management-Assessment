@@ -1,0 +1,14 @@
+# Render blueprint: https://render.com/docs/blueprint-spec
+# Free plan has no persistent disk, so the SQLite file is recreated (and re-seeded with the same
+# 10,000 employees) on each deploy/restart. Add a disk mounted at /data for persistence.
+services:
+  - type: web
+    name: acme-salary-management
+    runtime: docker
+    plan: free
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: SEED_EMPLOYEE_COUNT
+        value: "10000"
+      - key: JAVA_OPTS
+        value: "-XX:MaxRAMPercentage=70 -XX:+UseSerialGC"
