@@ -30,8 +30,9 @@ public class EmployeeController {
 
     @GetMapping
     public PageResponse<EmployeeResponse> list(
+            EmployeeSearchCriteria criteria,
             @PageableDefault(size = 20, sort = "fullName", direction = Sort.Direction.ASC) Pageable pageable) {
-        return PageResponse.from(service.list(pageable));
+        return PageResponse.from(service.search(criteria, pageable));
     }
 
     @GetMapping("/{id}")

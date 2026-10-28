@@ -16,6 +16,10 @@ spring:
       ddl-auto: none
   flyway:
     enabled: true
+  data:
+    web:
+      pageable:
+        max-page-size: 100
 
 app:
   seed:

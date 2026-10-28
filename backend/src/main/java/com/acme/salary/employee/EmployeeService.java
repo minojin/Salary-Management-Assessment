@@ -17,8 +17,8 @@ public class EmployeeService {
         this.repository = repository;
     }
 
-    public Page<EmployeeResponse> list(Pageable pageable) {
-        return repository.findAll(pageable).map(EmployeeResponse::from);
+    public Page<EmployeeResponse> search(EmployeeSearchCriteria criteria, Pageable pageable) {
+        return repository.findAll(EmployeeSpecifications.matching(criteria), pageable).map(EmployeeResponse::from);
     }
 
     public EmployeeResponse get(Long id) {
