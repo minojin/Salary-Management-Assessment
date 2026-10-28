@@ -57,7 +57,7 @@ export class EmployeesPage implements OnInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly destroyRef = inject(DestroyRef);
 
-  readonly columns = ['fullName', 'jobTitle', 'department', 'country', 'annualSalary', 'hireDate', 'actions'];
+  readonly columns = ['fullName', 'jobTitle', 'department', 'country', 'annualSalary', 'hireDate', 'createdAt', 'updatedAt', 'actions'];
 
   readonly filters = new FormGroup({
     search: new FormControl('', { nonNullable: true }),

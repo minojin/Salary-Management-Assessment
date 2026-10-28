@@ -26,6 +26,8 @@ const ASHA: Employee = {
   currency: 'INR',
   annualSalary: 1800000,
   hireDate: '2021-04-01',
+  createdAt: '2024-01-15T10:00:00Z',
+  updatedAt: '2024-06-01T09:30:00Z',
 };
 
 describe('EmployeeFormDialog', () => {
@@ -68,7 +70,7 @@ describe('EmployeeFormDialog', () => {
   it('creates a new employee and closes with the saved record', () => {
     const dialog = create({ employee: null, meta: META });
     api.create.and.returnValue(of(ASHA));
-    const { id: _id, currency: _currency, ...request } = ASHA;
+    const { id: _id, currency: _currency, createdAt: _createdAt, updatedAt: _updatedAt, ...request } = ASHA;
 
     dialog.form.setValue(request);
     dialog.save();

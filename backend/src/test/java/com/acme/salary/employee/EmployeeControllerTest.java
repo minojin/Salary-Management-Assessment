@@ -12,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -38,7 +39,8 @@ class EmployeeControllerTest {
             """;
 
     private static final EmployeeResponse ASHA = new EmployeeResponse(1L, "Asha Rao", "asha@acme.com",
-            "Software Engineer", "Engineering", Country.IN, "INR", 1_800_000L, LocalDate.of(2021, 4, 1));
+            "Software Engineer", "Engineering", Country.IN, "INR", 1_800_000L, LocalDate.of(2021, 4, 1),
+            Instant.parse("2024-01-15T10:00:00Z"), Instant.parse("2024-06-01T09:30:00Z"));
 
     @Autowired
     MockMvc mvc;
@@ -55,6 +57,8 @@ class EmployeeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content[0].fullName").value("Asha Rao"))
                 .andExpect(jsonPath("$.content[0].currency").value("INR"))
+                .andExpect(jsonPath("$.content[0].createdAt").value("2024-01-15T10:00:00Z"))
+                .andExpect(jsonPath("$.content[0].updatedAt").value("2024-06-01T09:30:00Z"))
                 .andExpect(jsonPath("$.totalElements").value(1))
                 .andExpect(jsonPath("$.page").value(0));
     }

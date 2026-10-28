@@ -1,5 +1,6 @@
 package com.acme.salary.employee;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 public record EmployeeResponse(
@@ -11,7 +12,9 @@ public record EmployeeResponse(
         Country country,
         String currency,
         long annualSalary,
-        LocalDate hireDate
+        LocalDate hireDate,
+        Instant createdAt,
+        Instant updatedAt
 ) {
 
     public static EmployeeResponse from(Employee employee) {
@@ -24,6 +27,8 @@ public record EmployeeResponse(
                 employee.getCountry(),
                 employee.getCountry().currency(),
                 employee.getAnnualSalary(),
-                employee.getHireDate());
+                employee.getHireDate(),
+                employee.getCreatedAt(),
+                employee.getUpdatedAt());
     }
 }

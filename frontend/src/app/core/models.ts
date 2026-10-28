@@ -24,9 +24,11 @@ export interface Employee {
   currency: string;
   annualSalary: number;
   hireDate: string; // ISO yyyy-MM-dd
+  createdAt: string; // ISO instant
+  updatedAt: string; // ISO instant
 }
 
-export type EmployeeRequest = Omit<Employee, 'id' | 'currency'>;
+export type EmployeeRequest = Omit<Employee, 'id' | 'currency' | 'createdAt' | 'updatedAt'>;
 
 export interface Page<T> {
   content: T[];

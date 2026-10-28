@@ -71,6 +71,22 @@ class EmployeeSearchTest {
     }
 
     @Test
+    void sortsByLastUpdatedSoEditedEmployeesComeFirst() throws InterruptedException {
+        Employee meera = repository.findAll().stream()
+                .filter(e -> e.getFullName().equals("Meera Iyer")).findFirst().orElseThrow();
+        Thread.sleep(5); // make sure the edit gets a strictly later timestamp
+        meera.update(meera.getFullName(), meera.getEmail(), "Senior HR Partner", meera.getDepartment(),
+                meera.getCountry(), meera.getAnnualSalary(), meera.getHireDate());
+        repository.saveAndFlush(meera);
+
+        var page = repository.findAll(EmployeeSpecifications.matching(EmployeeSearchCriteria.none()),
+                PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "updatedAt")));
+
+        assertThat(page.getContent()).extracting(Employee::getFullName).containsExactly("Meera Iyer");
+        assertThat(meera.getUpdatedAt()).isAfter(meera.getCreatedAt());
+    }
+
+    @Test
     void distinctDepartmentsAndJobTitlesAreSorted() {
         assertThat(repository.findDistinctDepartments()).containsExactly("Engineering", "Finance", "People");
         assertThat(repository.findDistinctJobTitles()).containsExactly("Accountant", "HR Partner", "Software Engineer");

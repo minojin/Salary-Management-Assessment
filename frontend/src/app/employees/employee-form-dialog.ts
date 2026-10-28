@@ -81,7 +81,7 @@ export class EmployeeFormDialog {
   constructor() {
     const employee = this.data.employee;
     if (employee) {
-      const { id: _id, currency: _currency, ...editable } = employee;
+      const { id: _id, currency: _currency, createdAt: _createdAt, updatedAt: _updatedAt, ...editable } = employee;
       this.form.setValue(editable);
     }
   }
