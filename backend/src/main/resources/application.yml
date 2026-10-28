@@ -25,6 +25,8 @@ app:
   seed:
     # Seeds employees on startup if the table is empty. Set to 0 to disable.
     employee-count: ${SEED_EMPLOYEE_COUNT:10000}
+    # Wipe and re-seed (used by scripts/seed.sh).
+    reset: ${SEED_RESET:false}
 
 management:
   endpoints:
